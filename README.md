@@ -1,56 +1,56 @@
-# Password Security Auditing with John the Ripper
+# Password Auditing with John the Ripper
 
-I used John the Ripper on a sample password-hash file to compare a dictionary-based attack with a longer password-cracking session. My goal was to see how quickly common passwords could be recovered and what the results say about password strength.
+I wanted to see how far I could get with the wordlist that came with John the Ripper. It recovered 13 sample passwords almost immediately. Then I ran John with its default settings and watched the count climb to 59 more before I hit Ctrl+C.
 
-All testing was performed locally against the sample hashes supplied for this exercise.
+## What I found
+
+- John loaded **584 password hashes** across **127 salts** and identified the format as `descrypt`.
+- The built-in wordlist recovered **13 passwords**. Running the same list again recovered **zero** new ones, and John reported **571 hashes remaining** at that point.
+- The default run recovered **59 more** in **1 minute and 23 seconds** before I stopped it. That put the two runs at **72 recoveries total**.
 
 ## Environment
 
-- **System:** Windows, Command Prompt
-- **Tool:** John the Ripper 1.9.0 Jumbo (64-bit)
-- **Input:** `hackme.txt` (sample password hashes)
-- **Wordlist:** `password.lst` (included with John the Ripper)
+| Tool or file | What I used it for |
+| --- | --- |
+| Windows Command Prompt | Ran the audit and checked the output |
+| John the Ripper 1.9.0 Jumbo (64-bit) | Loaded the hashes and tested password guesses |
+| `hackme.txt` | Sample password hashes supplied for the exercise |
+| `password.lst` | The wordlist included with John |
 
-I verified that the executable, wordlist, and sample hash file were all in the `run` directory before starting.
+I ran everything locally against the sample data.
 
-![Verified John the Ripper files in Command Prompt](images/01_environment_verification.png)
+## 1. Checking my setup
 
-## 1. Dictionary attack
+Before running anything, I used `dir john.exe password.lst hackme.txt` to make sure all three files were in the same `run` folder.
 
-I started by running:
+![Command Prompt showing the executable, wordlist, and sample hash file](01_environment_verification.png)
+
+## 2. Trying the built-in wordlist
 
 ```cmd
 john.exe --wordlist=password.lst hackme.txt
 ```
 
-John loaded **584 password hashes** and recovered **13 passwords** using the supplied wordlist. This showed how quickly a dictionary attack can find passwords that match known guesses.
+This was the result that caught my attention first. The included wordlist was enough to recover 13 passwords. I ran the same command again and got zero new results. Seeing both runs together made it easy to tell what the wordlist had actually added.
 
-![Dictionary attack output](images/02_dictionary_attack.png)
+![Dictionary attack output showing 13 recoveries and zero new results on the rerun](02_dictionary_attack.png)
 
-## 2. Additional password-cracking session
-
-Next, I ran John without specifying a wordlist:
+## 3. Letting John keep guessing
 
 ```cmd
 john.exe hackme.txt
 ```
 
-I let it run briefly, then stopped it with **Ctrl+C**. The output showed **59 passwords cracked during this session**, which lasted about **1 minute and 23 seconds**. John's default cracking behavior is not necessarily the same as a pure exhaustive brute-force attack.
+This time I left the mode unspecified and let John run with its default settings. I stopped it after 1 minute and 23 seconds, when the status line showed `59g`. I checked `john.pot` afterward to see what John had saved. I masked the sample passwords and usernames in the screenshots.
 
-![Second password-cracking session](images/03_password_cracking_session.png)
+![Default session output showing 59 recoveries before I stopped the run](03_password_cracking_session.png)
 
-The screenshots mask the recovered sample passwords and usernames while preserving the result counts.
+## What I would improve
 
-## 3. Verifying the results
-
-I opened `john.pot` to check that John saved the recovered hashes and passwords. I kept that file and its screenshot out of the public repository because they contain recovered credentials, even though the data was provided for testing.
-
-## What I found
-
-The wordlist recovered some passwords quickly, while the second session found more candidates after additional guessing. A larger wordlist can improve coverage, but it does not automatically make cracking faster. Passwords that are longer, less predictable, and unique are harder to guess than common words or simple variations.
+Next time I'd give each mode the same amount of time and use a separate results file for each run. My second run picked up where the first left off, so these numbers tell me how much the second pass added. With fresh runs, I could compare how much each mode finds on its own.
 
 ## What I learned
 
-The biggest takeaway for me was how much password predictability matters. I could see the difference between checking a fixed list of guesses and letting John continue trying other candidates. I also learned how to verify the output rather than just relying on what the terminal displayed.
+The part that stuck with me was how much John found before I even changed the settings. I also got into the habit of checking the status line and the saved results. When the terminal scrolls that fast, it's easy to miss what actually happened.
 
-**Tools:** John the Ripper · Windows Command Prompt · Password hash auditing
+**Tools:** John the Ripper · Windows Command Prompt
