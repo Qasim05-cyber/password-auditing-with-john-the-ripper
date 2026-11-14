@@ -1,6 +1,6 @@
 # Password Auditing with John the Ripper
 
-I wanted to see how far I could get with the wordlist that came with John the Ripper. It recovered 13 sample passwords almost immediately. Then I ran John with its default settings and watched the count climb to 59 more before I hit Ctrl+C.
+I started with the wordlist that came with John the Ripper to see how far it could get on its own. The first pass was over almost as soon as I started it. That made me curious about how many more guesses would land if I let John keep going.
 
 ## What I found
 
@@ -47,10 +47,10 @@ This time I left the mode unspecified and let John run with its default settings
 
 ## What I would improve
 
-Next time I'd give each mode the same amount of time and use a separate results file for each run. My second run picked up where the first left off, so these numbers tell me how much the second pass added. With fresh runs, I could compare how much each mode finds on its own.
+Next time I'd give each mode the same time limit and start it with the same hash file and an empty results file. John saved the first 13 recoveries in `john.pot`, so the default run started with 571 hashes left to test. Starting both runs from scratch would show me how each mode does on its own.
 
 ## What I learned
 
-The part that stuck with me was how much John found before I even changed the settings. I also got into the habit of checking the status line and the saved results. When the terminal scrolls that fast, it's easy to miss what actually happened.
+Seeing the same wordlist go from 13 results to zero on a rerun made me pay closer attention to what John had already saved. Now I check both the status line and the saved results before I write down what a run found.
 
 **Tools:** John the Ripper · Windows Command Prompt
