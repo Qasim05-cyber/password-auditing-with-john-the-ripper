@@ -41,7 +41,7 @@ This was the result that caught my attention first. The included wordlist was en
 john.exe hackme.txt
 ```
 
-This time I left the mode unspecified and let John run with its default settings. I stopped it after 1 minute and 23 seconds, when the status line showed `59g`. I checked `john.pot` afterward to see what John had saved. I masked the sample passwords and usernames in the screenshots.
+This time I left the mode unspecified and let John run with its default settings. I stopped it after 1 minute and 23 seconds, when the status line showed `59g`. I checked `john.pot` afterward to see what John had saved. The results screenshots show entries from the sample dataset.
 
 ![Default session output showing 59 recoveries before I stopped the run](03_password_cracking_session.png)
 
